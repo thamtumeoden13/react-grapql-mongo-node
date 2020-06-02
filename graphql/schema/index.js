@@ -54,7 +54,7 @@ module.exports = buildSchema(`
             bookEvent(eventId: ID!): Booking!
             cancelBooking(bookingId: ID!): Event!
         }
-
+        
         schema {
                 query: RootQuery
                 mutation: RootMutation
