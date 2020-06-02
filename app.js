@@ -6,12 +6,13 @@ const cors = require('cors')
 
 const graphqlSchema = require('./graphql/schema/index')
 const graphqlResolvers = require('./graphql/resolvers/index')
+const isAuth = require('./middleware/is-auth')
 
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
-
+app.use(isAuth);
 
 const mongoDB = "mongodb://localhost/mongodb"
 mongoose.connect(mongoDB, {
@@ -21,7 +22,6 @@ mongoose.connect(mongoDB, {
 
 })
 mongoose.Promise = global.Promise;
-
 
 app.use('/graphql',
     graphqlHttp({
