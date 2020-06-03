@@ -12,7 +12,7 @@ export class AuthPage extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            isLogin: false
+            isLogin: true
         }
         this.emailEl = React.createRef()
         this.passwordEl = React.createRef()
@@ -37,7 +37,7 @@ export class AuthPage extends Component {
         let requestBody = {
             query: `
                 query {
-                    login(email:\"${email}\", password:\"${password}\"){
+                    login(email:"${email}", password:"${password}"){
                         userId
                         token
                         tokenExpiration
@@ -49,7 +49,7 @@ export class AuthPage extends Component {
             requestBody = {
                 query: `
                     mutation { 
-                        createUser(userInput:{ email:\"${email}\", password :\"${password}\" }){ 
+                        createUser(userInput:{ email:"${email}", password :"${password}" }){ 
                             _id
                             email
                         } 
@@ -70,9 +70,11 @@ export class AuthPage extends Component {
             }
             return res.json()
         }).then(resData => {
-            if (resData.data.login.token) {
-                const { userId, token, tokenExpiration } = resData.data.login
-                this.context.login(userId, token, tokenExpiration)
+            if (this.state.isLogin) {
+                if (resData.data.login.token) {
+                    const { userId, token, tokenExpiration } = resData.data.login
+                    this.context.login(userId, token, tokenExpiration)
+                }
             }
             console.log(resData)
         }).catch(err => {
@@ -84,7 +86,7 @@ export class AuthPage extends Component {
         return (
             <form className="auth-form" onSubmit={this.handlerSubmit}>
                 <div className="form-control">
-                    <label htmlFor="email">Email</label>
+                    <label htmlFor="email">E-Mail</label>
                     <input type="email" id="email" ref={this.emailEl} />
                 </div>
                 <div className="form-control">
@@ -92,7 +94,7 @@ export class AuthPage extends Component {
                     <input type="password" id="password" ref={this.passwordEl} />
                 </div>
                 <div className="form-action">
-                    <button type="button" onClick={this.switchHandlerMode}>Switch to {!this.state.isLogin ? 'SignUp' : 'Login'}</button>
+                    <button type="button" onClick={this.switchHandlerMode}>Switch to {this.state.isLogin ? 'SignUp' : 'Login'}</button>
                     <button type="submit">Submit</button>
                 </div>
             </form>
