@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
+
+import AuthContext from '../context/auth-context'
+
 import './auth.css'
 
+
 export class AuthPage extends Component {
+
+    static contextType = AuthContext;
 
     constructor(props) {
         super(props)
@@ -31,7 +37,7 @@ export class AuthPage extends Component {
         let requestBody = {
             query: `
                 query {
-                    login(email: ${email}, password: ${password}){
+                    login(email:\"${email}\", password:\"${password}\"){
                         userId
                         token
                         tokenExpiration
@@ -64,6 +70,10 @@ export class AuthPage extends Component {
             }
             return res.json()
         }).then(resData => {
+            if (resData.data.login.token) {
+                const { userId, token, tokenExpiration } = resData.data.login
+                this.context.login(userId, token, tokenExpiration)
+            }
             console.log(resData)
         }).catch(err => {
             console.log(err)

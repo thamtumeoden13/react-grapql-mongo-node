@@ -10,7 +10,7 @@ const isAuth = require('./middleware/is-auth')
 
 const app = express();
 
-// app.use(cors());
+app.use(cors());
 
 app.use(bodyParser.json());
 
@@ -21,6 +21,7 @@ app.use((req, res, next) => {
     if (req.method === "OPTIONS") {
         res.sendStatus(200)
     }
+    console.log(req.method)
     next()
 })
 
