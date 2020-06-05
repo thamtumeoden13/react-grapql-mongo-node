@@ -31,7 +31,7 @@ export class AuthPage extends Component {
         console.log(email, password)
 
         if (!email || !password || email.trim().length === 0 || password.trim().length === 0) {
-            return
+            return;
         }
 
         let requestBody = {
