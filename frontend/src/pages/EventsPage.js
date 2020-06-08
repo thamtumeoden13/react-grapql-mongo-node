@@ -1,6 +1,8 @@
 import React, { Component, Fragment, createRef } from 'react'
 import Modal from '../components/modal/Modal'
 import AuthContext from '../context/auth-context'
+import EventLists from '../components/eventList/EventLists'
+import Spinner from '../components/spinner/Spinner'
 
 import './events.css'
 
@@ -12,7 +14,9 @@ export class EventsPage extends Component {
         super(props)
         this.state = {
             creating: false,
-            events: []
+            events: [],
+            isLoading: false,
+            selectedEvent: null
         }
         this.titleElRef = createRef()
         this.priceElRef = createRef()
@@ -29,12 +33,12 @@ export class EventsPage extends Component {
     }
 
     modalCancelHandler = () => {
-        this.setState({ creating: false })
+        this.setState({ creating: false, selectedEvent: null })
 
     }
 
     modalConfirmHandler = () => {
-        this.setState({ creating: false })
+        this.setState({ creating: false, isLoading: true })
         const title = this.titleElRef.current.value
         const price = +this.priceElRef.current.value
         const date = this.dateElRef.current.value
@@ -59,10 +63,6 @@ export class EventsPage extends Component {
                             price
                             date
                             description
-                            creator{
-                                _id
-                                email
-                            }
                         } 
                     }
                 `
@@ -80,17 +80,34 @@ export class EventsPage extends Component {
             }
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
+                this.setState({ isLoading: false })
                 throw new Error('Fail Connect')
             }
             return res.json()
         }).then(resData => {
-            this.fetchEvents()
+            console.log(resData)
+            this.setState(prevState => {
+                let updateEvents = [...prevState.events]
+                updateEvents.push({
+                    _id: resData.data.createEvent._id,
+                    title: resData.data.createEvent.title,
+                    price: resData.data.createEvent.price,
+                    date: resData.data.createEvent.date,
+                    description: resData.data.createEvent.description,
+                    creator: {
+                        _id: this.context.userId
+                    }
+                })
+                return { events: updateEvents, isLoading: false }
+            })
         }).catch(err => {
             console.log(err)
+            this.setState({ isLoading: false })
         })
     }
 
     fetchEvents = () => {
+        this.setState({ isLoading: true })
         const requestBody = {
             query: `
                     query { 
@@ -117,19 +134,31 @@ export class EventsPage extends Component {
             }
         }).then(res => {
             if (res.status !== 200 && res.status !== 201) {
+                this.setState({ isLoading: false })
                 throw new Error('Fail Connect')
             }
             return res.json()
         }).then(resData => {
             console.log(resData)
-            this.setState({ events: resData.data.events })
+            this.setState({ events: resData.data.events, isLoading: false })
         }).catch(err => {
             console.log(err)
+            this.setState({ isLoading: false })
         })
     }
 
+    handlerShowDetail = (eventId) => {
+        this.setState(prevState => {
+            const selectedEvent = prevState.events.find(e => e._id === eventId)
+            return { selectedEvent: selectedEvent }
+        })
+    }
+    bookEventHandler = () => {
+
+    }
+
     render() {
-        const { creating, events } = this.state
+        const { creating, events, isLoading, selectedEvent } = this.state
         return (
             <Fragment>
                 {creating &&
@@ -158,19 +187,33 @@ export class EventsPage extends Component {
                         </form>
                     </Modal>
                 }
+                {selectedEvent &&
+                    <Modal title={selectedEvent.title}
+                        canCancel={true} canConfirm={true}
+                        onCancel={this.modalCancelHandler}
+                        onConfirm={this.bookEventHandler}
+                        confirmText="Book"
+                    >
+                        <h1> {selectedEvent.title} </h1>
+                        <h2>$ {selectedEvent.price} - {new Date(selectedEvent.date).toLocaleDateString()}</h2>
+                        <p>{selectedEvent.description}</p>
+                    </Modal>
+                }
                 {this.context.token &&
                     <div className="events-control">
                         <p>Share your own Events!</p>
                         <button className="btn" onClick={this.onHandleCreatEvent}>Create Event</button>
                     </div>
                 }
-                <ul className="events__list">
-                    {events && events.length > 0 &&
-                        events.map((item, index) => (
-                            <li key={index} className="events__list-item">{item.title}</li>
-                        ))
-                    }
-                </ul>
+                {isLoading
+                    ? <Spinner />
+                    :
+                    <EventLists
+                        events={events}
+                        authUserId={this.context.userId}
+                        onViewDetail={this.handlerShowDetail}
+                    />
+                }
             </Fragment>
         )
     }
