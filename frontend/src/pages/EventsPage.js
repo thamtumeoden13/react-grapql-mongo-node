@@ -110,20 +110,20 @@ export class EventsPage extends Component {
         this.setState({ isLoading: true })
         const requestBody = {
             query: `
-                    query { 
-                        events { 
+                query { 
+                    events { 
+                        _id
+                        title
+                        price
+                        date
+                        description
+                        creator{
                             _id
-                            title
-                            price
-                            date
-                            description
-                            creator{
-                                _id
-                                email
-                            }
-                        } 
-                    }
-                `
+                            email
+                        }
+                    } 
+                }
+            `
         }
 
         fetch('http://localhost:4000/graphql', {
@@ -140,7 +140,8 @@ export class EventsPage extends Component {
             return res.json()
         }).then(resData => {
             console.log(resData)
-            this.setState({ events: resData.data.events, isLoading: false })
+            const events = resData.data.events
+            this.setState({ events: events, isLoading: false })
         }).catch(err => {
             console.log(err)
             this.setState({ isLoading: false })
@@ -153,8 +154,47 @@ export class EventsPage extends Component {
             return { selectedEvent: selectedEvent }
         })
     }
-    bookEventHandler = () => {
 
+    bookEventHandler = () => {
+        if (!this.context.token) {
+            this.setState({ selectedEvent: null })
+            return;
+        }
+        const requestBody = {
+            query: `
+                mutation { 
+                    bookEvent(eventId:"${this.state.selectedEvent._id}") { 
+                        _id
+                        createdAt
+                        updatedAt
+                    } 
+                }
+            `
+        }
+
+        const token = this.context.token;
+        console.log(token, requestBody)
+
+        fetch('http://localhost:4000/graphql', {
+            method: "POST",
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        }).then(res => {
+            if (res.status !== 200 && res.status !== 201) {
+                this.setState({ isLoading: false })
+                throw new Error('Fail Connect')
+            }
+            return res.json()
+        }).then(resData => {
+            console.log(resData)
+            this.setState({ selectedEvent: null })
+        }).catch(err => {
+            console.log(err)
+            this.setState({ isLoading: false })
+        })
     }
 
     render() {
@@ -192,7 +232,7 @@ export class EventsPage extends Component {
                         canCancel={true} canConfirm={true}
                         onCancel={this.modalCancelHandler}
                         onConfirm={this.bookEventHandler}
-                        confirmText="Book"
+                        confirmText={this.context.token ? "Book" : "confirm"}
                     >
                         <h1> {selectedEvent.title} </h1>
                         <h2>$ {selectedEvent.price} - {new Date(selectedEvent.date).toLocaleDateString()}</h2>

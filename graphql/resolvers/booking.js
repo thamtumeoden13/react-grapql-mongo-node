@@ -11,7 +11,10 @@ module.exports = {
 
         try {
             const bookings = await Booking.find()
-            return bookings.map(booking => {
+            const filterBookings = bookings.filter(booking => { return booking._doc.event })
+            console.log("bookings", bookings)
+            console.log("filterBookings", filterBookings)
+            return filterBookings.map(booking => {
                 return transformBooking(booking)
             })
         } catch (error) {
