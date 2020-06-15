@@ -10,10 +10,8 @@ module.exports = {
         }
 
         try {
-            const bookings = await Booking.find()
+            const bookings = await Booking.find({ user: req.userId })
             const filterBookings = bookings.filter(booking => { return booking._doc.event })
-            console.log("bookings", bookings)
-            console.log("filterBookings", filterBookings)
             return filterBookings.map(booking => {
                 return transformBooking(booking)
             })
@@ -34,10 +32,8 @@ module.exports = {
                 event: fetchedEvent // '5ecbf59293ddef07b6bb56ff'
             })
             const result = await booking.save()
-            console.log({ result })
             return transformBooking(result)
         } catch (error) {
-            console.log({ error })
             throw error
         }
     },

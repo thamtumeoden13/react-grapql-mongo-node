@@ -1,9 +1,9 @@
 import React from 'react'
-import EventItem from './eventItem/EventItem'
+import EventItem from './event/Event'
 
-import './eventList.css'
+import './events.css'
 
-const EventList = props => {
+const Events = props => {
 
     const events = props.events.map((event, index) => {
         return <EventItem
@@ -26,4 +26,4 @@ const EventList = props => {
     )
 }
 
-export default EventList
+export default Events

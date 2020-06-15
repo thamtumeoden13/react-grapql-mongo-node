@@ -1,10 +1,10 @@
 import React, { Component, Fragment, createRef } from 'react'
 import Modal from '../components/modal/Modal'
 import AuthContext from '../context/auth-context'
-import EventLists from '../components/eventList/EventLists'
+import EventList from '../components/events/Events'
 import Spinner from '../components/spinner/Spinner'
 
-import './events.css'
+import './eventsPage.css'
 
 export class EventsPage extends Component {
 
@@ -248,7 +248,7 @@ export class EventsPage extends Component {
                 {isLoading
                     ? <Spinner />
                     :
-                    <EventLists
+                    <EventList
                         events={events}
                         authUserId={this.context.userId}
                         onViewDetail={this.handlerShowDetail}
