@@ -21,7 +21,6 @@ app.use((req, res, next) => {
     if (req.method === "OPTIONS") {
         res.sendStatus(200)
     }
-    console.log(req.method)
     next()
 })
 

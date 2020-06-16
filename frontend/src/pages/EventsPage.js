@@ -155,6 +155,10 @@ export class EventsPage extends Component {
         })
     }
 
+    handlerDeleteEvent = (eventId) => {
+        console.log("handlerDeleteEvent")
+    }
+
     bookEventHandler = () => {
         if (!this.context.token) {
             this.setState({ selectedEvent: null })
@@ -252,6 +256,7 @@ export class EventsPage extends Component {
                         events={events}
                         authUserId={this.context.userId}
                         onViewDetail={this.handlerShowDetail}
+                        onDeleteEvent={this.handlerDeleteEvent}
                     />
                 }
             </Fragment>

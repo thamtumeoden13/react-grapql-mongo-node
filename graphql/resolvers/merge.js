@@ -9,12 +9,10 @@ const eventLoader = new DataLoader((eventIds) => {
 })
 
 const userLoader = new DataLoader((userIds) => {
-    console.log(userIds)
     return User.find({ _id: { $in: userIds } })
 })
 
 const transformEvent = event => {
-    console.log(event)
     return {
         ...event._doc,
         _id: event.id,
@@ -48,7 +46,6 @@ const events = async eventId => {
 
 const user = async userId => {
     try {
-
         const user = await userLoader.load(userId.toString())
         return {
             ...user._doc,

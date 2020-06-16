@@ -11,7 +11,8 @@ const Event = props => {
             </div>
             <div>
                 {props.authUserId === props.creatorId
-                    ? <p>Your the owner of this event.</p>
+                    ? <button type="button" className="btn"
+                        onClick={() => props.onDelete(props.eventId)}>Delete</button>
                     : <button type="button" className="btn"
                         onClick={() => props.onDetail(props.eventId)}>View Details</button>
                 }
