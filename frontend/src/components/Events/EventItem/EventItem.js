@@ -1,8 +1,8 @@
 import React from 'react'
 
-import './event.css'
+import './eventItem.css'
 
-const Event = props => {
+const EventItem = props => {
     return (
         <li key={props.eventId} className="events__list-item">
             <div>
@@ -21,4 +21,4 @@ const Event = props => {
     )
 }
 
-export default Event
+export default EventItem

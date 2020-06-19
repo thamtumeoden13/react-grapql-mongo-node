@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import Backdrop from '../backdrop/Backdrop'
+import Backdrop from '../Backdrop/Backdrop'
 
 import './modal.css'
 

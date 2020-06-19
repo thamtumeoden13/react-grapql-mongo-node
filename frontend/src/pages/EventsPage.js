@@ -1,8 +1,8 @@
 import React, { Component, Fragment, createRef } from 'react'
-import Modal from '../components/modal/Modal'
+import Modal from '../components/Modal/Modal'
 import AuthContext from '../context/auth-context'
-import EventList from '../components/events/Events'
-import Spinner from '../components/spinner/Spinner'
+import EventList from '../components/Events/EventList'
+import Spinner from '../components/Spinner/Spinner'
 
 import './eventsPage.css'
 

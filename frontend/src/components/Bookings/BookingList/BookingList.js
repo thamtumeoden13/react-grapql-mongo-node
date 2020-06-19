@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 
-import './bookings.css'
+import './bookingList.css'
 
-const Bookings = props => {
+const BookingList = props => {
     return (
         <ul className="bookings__list">
             {props.bookings.map(booking => {
@@ -20,4 +20,4 @@ const Bookings = props => {
     )
 }
 
-export default Bookings;
+export default BookingList;
