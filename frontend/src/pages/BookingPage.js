@@ -3,6 +3,8 @@ import AuthContext from '../context/auth-context'
 import Spinner from '../components/Spinner/Spinner'
 import BookingList from '../components/Bookings/BookingList/BookingList'
 import BookingsChart from '../components/Bookings/BookingsChart/BookingsChart'
+import BookingsControl from '../components/Bookings/BookingsControl/BookingsControl'
+
 export class BookingPage extends Component {
 
     static contextType = AuthContext
@@ -37,6 +39,7 @@ export class BookingPage extends Component {
                             _id
                             title
                             date
+                            price
                         }
                     } 
                 }
@@ -118,14 +121,10 @@ export class BookingPage extends Component {
         if (!isLoading) {
             content = (
                 <Fragment>
-                    <div>
-                        <button className="btn" onClick={() => this.handlerOutputType('list')} >
-                            List
-                        </button>
-                        <button className="btn" onClick={() => this.handlerOutputType('chart')} >
-                            Chart
-                        </button>
-                    </div>
+                    <BookingsControl
+                        handlerOutputType={this.handlerOutputType}
+                        activeButtonType={outputType}
+                    />
                     <div>
                         {outputType === 'list'
                             ? <BookingList

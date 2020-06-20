@@ -14,3 +14,22 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.bookings__item-data {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.bookings__item-data h1 {
+    margin:  0;
+    font-size: 1.5rem;
+    color: #5101d1;
+}
+
+.bookings__item-data h2 {
+    margin:  0;
+    font-size: 1rem;
+    color: gray;
+}
